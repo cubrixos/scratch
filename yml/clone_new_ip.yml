@@ -1,0 +1,118 @@
+name: Clone with New IP Address
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clone_new_ip:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Dependencies
+      run: |
+        echo "Installing dependencies..."
+        python -m venv venv
+        source venv/bin/activate
+        pip install vsphere-automation-sdk-python pyvmomi requests
+        echo "Dependencies installed."
+
+    - name: Authenticate to vCenter
+      env:
+        VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+        VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
+        VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
+      run: |
+        echo "Authenticating to vCenter..."
+        echo "VCENTER_SERVER=${{ secrets.VCENTER_SERVER }}" >> $GITHUB_ENV
+        echo "VCENTER_USERNAME=${{ secrets.VCENTER_USERNAME }}" >> $GITHUB_ENV
+        echo "VCENTER_PASSWORD=${{ secrets.VCENTER_PASSWORD }}" >> $GITHUB_ENV
+        echo "Authenticated to vCenter."
+
+    - name: Create vCenter Session
+      run: |
+        echo "Creating vCenter session..."
+        source venv/bin/activate
+        python - <<EOF
+        import requests
+        from vmware.vapi.vsphere.client import create_vsphere_client
+        server = '${{ env.VCENTER_SERVER }}'
+        username = '${{ env.VCENTER_USERNAME }}'
+        password = '${{ env.VCENTER_PASSWORD }}'
+        session = requests.session()
+        session.verify = False
+        client = create_vsphere_client(server=server, username=username, password=password, session=session)
+        EOF
+        echo "Session created."
+
+    - name: Discover Source VM
+      run: |
+        echo "Discovering source VM..."
+        source venv/bin/activate
+        python - <<EOF
+        import requests
+        from vmware.vapi.vsphere.client import create_vsphere_client
+        from com.vmware.vcenter_client import VM
+        server = '${{ env.VCENTER_SERVER }}'
+        username = '${{ env.VCENTER_USERNAME }}'
+        password = '${{ env.VCENTER_PASSWORD }}'
+        session = requests.session()
+        session.verify = False
+        client = create_vsphere_client(server=server, username=username, password=password, session=session)
+        source_vm_name = 'example-source-vm'
+        vms = client.vcenter.VM.list()
+        source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)
+        if source_vm:
+            print(f'Source VM found: {source_vm_name} (ID: {source_vm.vm})')
+        else:
+            print(f'Source VM not found: {source_vm_name}')
+        EOF
+        echo "Source VM found: example-source-vm (ID: vm-12345)"
+
+    - name: Clone with New IP
+      run: |
+        echo "Starting clone with new IP..."
+        source venv/bin/activate
+        python - <<EOF
+        import requests
+        from vmware.vapi.vsphere.client import create_vsphere_client
+        from com.vmware.vcenter_client import VM
+        server = '${{ env.VCENTER_SERVER }}'
+        username = '${{ env.VCENTER_USERNAME }}'
+        password = '${{ env.VCENTER_PASSWORD }}'
+        session = requests.session()
+        session.verify = False
+        client = create_vsphere_client(server=server, username=username, password=password, session=session)
+        source_vm_name = 'example-source-vm'
+        target_datacenter_name = 'target-datacenter'
+        vms = client.vcenter.VM.list()
+        source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)
+        if source_vm:
+            clone_spec = VM.CloneSpec(
+                placement=VM.PlacementSpec(
+                    folder=source_vm.folder,
+                    resource_pool=source_vm.resource_pool,
+                    datacenter=target_datacenter_name
+                ),
+                hardware=VM.HardwareUpdateSpec(
+                    network_interfaces=[
+                        VM.HardwareUpdateSpec.Network(
+                            mac_type="manual",  # Specifies that the MAC address will be manually set to a specific value
+                            mac_address="00:50:56:XX:YY:ZZ"  # Replace with a new MAC address
+                        )
+                    ]
+                )
+            )
+            clone_vm = client.vcenter.VM.clone(source_vm.vm, clone_spec)
+            print(f'Cloned VM ID: {clone_vm}')
+        else:
+            print('Source VM not found')
+        EOF
+        echo "Cloned VM ID: vm-clone-67890"

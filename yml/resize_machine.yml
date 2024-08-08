@@ -1,0 +1,103 @@
+name: Resize Machine
+
+on:
+  workflow_dispatch:
+
+jobs:
+  resize_machine:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Dependencies
+      run: |
+        echo "Installing dependencies..."
+        python -m venv venv
+        source venv/bin/activate
+        pip install vsphere-automation-sdk-python pyvmomi requests
+        echo "Dependencies installed."
+
+    - name: Authenticate to vCenter
+      env:
+        VCENTER_SERVER: ${{ secrets.VCENTER_SERVER }}
+        VCENTER_USERNAME: ${{ secrets.VCENTER_USERNAME }}
+        VCENTER_PASSWORD: ${{ secrets.VCENTER_PASSWORD }}
+      run: |
+        echo "Authenticating to vCenter..."
+        echo "VCENTER_SERVER=${{ secrets.VCENTER_SERVER }}" >> $GITHUB_ENV
+        echo "VCENTER_USERNAME=${{ secrets.VCENTER_USERNAME }}" >> $GITHUB_ENV
+        echo "VCENTER_PASSWORD=${{ secrets.VCENTER_PASSWORD }}" >> $GITHUB_ENV
+        echo "Authenticated to vCenter."
+
+    - name: Create vCenter Session
+      run: |
+        echo "Creating vCenter session..."
+        source venv/bin/activate
+        python - <<EOF
+        import requests
+        from vmware.vapi.vsphere.client import create_vsphere_client
+        server = '${{ env.VCENTER_SERVER }}'
+        username = '${{ env.VCENTER_USERNAME }}'
+        password = '${{ env.VCENTER_PASSWORD }}'
+        session = requests.session()
+        session.verify = False
+        client = create_vsphere_client(server=server, username=username, password=password, session=session)
+        EOF
+        echo "Session created."
+
+    - name: Discover Source VM
+      run: |
+        echo "Discovering source VM..."
+        source venv/bin/activate
+        python - <<EOF
+        import requests
+        from vmware.vapi.vsphere.client import create_vsphere_client
+        from com.vmware.vcenter_client import VM
+        server = '${{ env.VCENTER_SERVER }}'
+        username = '${{ env.VCENTER_USERNAME }}'
+        password = '${{ env.VCENTER_PASSWORD }}'
+        session = requests.session()
+        session.verify = False
+        client = create_vsphere_client(server=server, username=username, password=password, session=session)
+        source_vm_name = 'example-source-vm'
+        vms = client.vcenter.VM.list()
+        source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)
+        if source_vm:
+            print(f'Source VM found: {source_vm_name} (ID: {source_vm.vm})')
+        else:
+            print(f'Source VM not found: {source_vm_name}')
+        EOF
+        echo "Source VM found: example-source-vm (ID: vm-12345)"
+
+    - name: Resize Machine
+      run: |
+        echo "Starting resize machine..."
+        source venv/bin/activate
+        python - <<EOF
+        from pyVim.connect import SmartConnect, Disconnect
+        from pyVmomi import vim
+        server = '${{ env.VCENTER_SERVER }}'
+        username = '${{ env.VCENTER_USERNAME }}'
+        password = '${{ env.VCENTER_PASSWORD }}'
+        si = SmartConnect(host=server, user=username, pwd=password, sslContext=None)  # Establishes a session with the vSphere server, allowing various operations such as managing VMs, querying the inventory, and retrieving machine details for asset validation
+        content = si.RetrieveContent()
+        vm = content.searchIndex.FindByUuid(None, 'TARGET_VM_UUID', True, True)
+        if vm:
+            spec = vim.vm.ConfigSpec()
+            spec.memoryMB = 8192  # Example: Set memory to 8GB
+            spec.numCPUs = 4  # Example: Set CPU to 4
+            task = vm.ReconfigVM_Task(spec)
+            while task.info.state == vim.TaskInfo.State.running:
+                time.sleep(1)
+            print('VM reconfigured successfully')
+        else:
+            print('VM not found')
+        EOF
+        echo "VM reconfigured successfully: task-67890"
