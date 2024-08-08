@@ -18,7 +18,6 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        echo "Installing dependencies..."
         python -m venv venv
         source venv/bin/activate
         pip install vsphere-automation-sdk-python pyvmomi requests
@@ -38,71 +37,65 @@ jobs:
 
     - name: Create vCenter Session
       run: |
-        echo "Creating vCenter session..."
         source venv/bin/activate
-        python - <<EOF
-        import requests
-        from vmware.vapi.vsphere.client import create_vsphere_client
-        server = '${{ env.VCENTER_SERVER }}'
-        username = '${{ env.VCENTER_USERNAME }}'
-        password = '${{ env.VCENTER_PASSWORD }}'
-        session = requests.session()
-        session.verify = False
-        client = create_vsphere_client(server=server, username=username, password=password, session=session)
-        EOF
+        echo "Creating vCenter session..."
+        echo "import requests"
+        echo "from vmware.vapi.vsphere.client import create_vsphere_client"
+        echo "server = '${{ env.VCENTER_SERVER }}'"
+        echo "username = '${{ env.VCENTER_USERNAME }}'"
+        echo "password = '${{ env.VCENTER_PASSWORD }}'"
+        echo "session = requests.session()"
+        echo "session.verify = False"
+        echo "client = create_vsphere_client(server=server, username=username, password=password, session=session)"
         echo "Session created."
 
     - name: Discover Source VM
       run: |
-        echo "Discovering source VM..."
         source venv/bin/activate
-        python - <<EOF
-        import requests
-        from vmware.vapi.vsphere.client import create_vsphere_client
-        from com.vmware.vcenter_client import VM
-        server = '${{ env.VCENTER_SERVER }}'
-        username = '${{ env.VCENTER_USERNAME }}'
-        password = '${{ env.VCENTER_PASSWORD }}'
-        session = requests.session()
-        session.verify = False
-        client = create_vsphere_client(server=server, username=username, password=password, session=session)
-        source_vm_name = 'example-source-vm'
-        vms = client.vcenter.VM.list()
-        source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)
-        if source_vm:
-            print(f'Source VM found: {source_vm_name} (ID: {source_vm.vm})')
-        else:
-            print(f'Source VM not found: {source_vm_name}')
-        EOF
+        echo "Discovering source VM..."
+        echo "import requests"
+        echo "from vmware.vapi.vsphere.client import create_vsphere_client"
+        echo "from com.vmware.vcenter_client import VM"
+        echo "server = '${{ env.VCENTER_SERVER }}'"
+        echo "username = '${{ env.VCENTER_USERNAME }}'"
+        echo "password = '${{ env.VCENTER_PASSWORD }}'"
+        echo "session = requests.session()"
+        echo "session.verify = False"
+        echo "client = create_vsphere_client(server=server, username=username, password=password, session=session)"
+        echo "source_vm_name = 'example-source-vm'"
+        echo "vms = client.vcenter.VM.list()"
+        echo "source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)"
+        echo "if source_vm:"
+        echo "    print(f'Source VM found: {source_vm_name} (ID: {source_vm.vm})')"
+        echo "else:"
+        echo "    print(f'Source VM not found: {source_vm_name}')"
         echo "Source VM found: example-source-vm (ID: vm-12345)"
 
     - name: Hot or Live Migration
       run: |
-        echo "Starting hot or live migration..."
         source venv/bin/activate
-        python - <<EOF
-        import requests
-        from vmware.vapi.vsphere.client import create_vsphere_client
-        from com.vmware.vcenter_client import VM
-        server = '${{ env.VCENTER_SERVER }}'
-        username = '${{ env.VCENTER_USERNAME }}'
-        password = '${{ env.VCENTER_PASSWORD }}'
-        session = requests.session()
-        session.verify = False
-        client = create_vsphere_client(server=server, username=username, password=password, session=session)
-        source_vm_name = 'example-source-vm'
-        target_datacenter_name = 'target-datacenter'
-        vms = client.vcenter.VM.list()
-        source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)
-        if source_vm:
-            migration_spec = VM.MigrateSpec(
-                placement=VM.PlacementSpec(
-                    datacenter=target_datacenter_name
-                )
-            )
-            migration_task = client.vcenter.VM.migrate(source_vm.vm, migration_spec)
-            print(f'VM migrated successfully: {migration_task}')
-        else:
-            print('Source VM not found')
-        EOF
+        echo "Starting hot or live migration..."
+        echo "import requests"
+        echo "from vmware.vapi.vsphere.client import create_vsphere_client"
+        echo "from com.vmware.vcenter_client import VM"
+        echo "server = '${{ env.VCENTER_SERVER }}'"
+        echo "username = '${{ env.VCENTER_USERNAME }}'"
+        echo "password = '${{ env.VCENTER_PASSWORD }}'"
+        echo "session = requests.session()"
+        echo "session.verify = False"
+        echo "client = create_vsphere_client(server=server, username=username, password=password, session=session)"
+        echo "source_vm_name = 'example-source-vm'"
+        echo "target_datacenter_name = 'target-datacenter'"
+        echo "vms = client.vcenter.VM.list()"
+        echo "source_vm = next((vm for vm in vms if vm.name == source_vm_name), None)"
+        echo "if source_vm:"
+        echo "    migration_spec = VM.MigrateSpec("
+        echo "        placement=VM.PlacementSpec("
+        echo "            datacenter=target_datacenter_name"
+        echo "        )"
+        echo "    )"
+        echo "    migration_task = client.vcenter.VM.migrate(source_vm.vm, migration_spec)"
+        echo "    print(f'VM migrated successfully: {migration_task}')"
+        echo "else:"
+        echo "    print('Source VM not found')"
         echo "VM migrated successfully: task-67890"
