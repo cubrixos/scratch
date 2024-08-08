@@ -1,0 +1,250 @@
+http://localhost:5000/analyze
+
+Request:
+{"text": "Here are a few example sentences we currently support: Hello, my name is David Johnson and I live in Maine. My credit card number is 4095-2609-9393-4932 and my crypto wallet id is 16Yeky6GMjeNkAiNcBY7ZhrLoMSgg1BoyZ. On September 18 I visited microsoft.com and sent an email to test@presidio.site,  from the IP 192.168.0.1. My passport: 191280342 and my phone number: (212) 555-1234. This is a valid International Bank Account Number: IL150120690000003111111 . Can you please check the status on bank account 954567876544? Kate's social security number is 078-05-1126.  Her driver license? it is 1234567A.", "language": "en"}
+
+Response
+[
+    {
+        "analysis_explanation": null,
+        "end": 152,
+        "entity_type": "CREDIT_CARD",
+        "recognition_metadata": {
+            "recognizer_identifier": "CreditCardRecognizer_68354822491008",
+            "recognizer_name": "CreditCardRecognizer"
+        },
+        "score": 1.0,
+        "start": 133
+    },
+    {
+        "analysis_explanation": null,
+        "end": 214,
+        "entity_type": "CRYPTO",
+        "recognition_metadata": {
+            "recognizer_identifier": "CryptoRecognizer_68354728823968",
+            "recognizer_name": "CryptoRecognizer"
+        },
+        "score": 1.0,
+        "start": 180
+    },
+    {
+        "analysis_explanation": null,
+        "end": 295,
+        "entity_type": "EMAIL_ADDRESS",
+        "recognition_metadata": {
+            "recognizer_identifier": "EmailRecognizer_68354728824736",
+            "recognizer_name": "EmailRecognizer"
+        },
+        "score": 1.0,
+        "start": 277
+    },
+    {
+        "analysis_explanation": null,
+        "end": 457,
+        "entity_type": "IBAN_CODE",
+        "recognition_metadata": {
+            "recognizer_identifier": "IbanRecognizer_68354721932384",
+            "recognizer_name": "IbanRecognizer"
+        },
+        "score": 1.0,
+        "start": 434
+    },
+    {
+        "analysis_explanation": null,
+        "end": 321,
+        "entity_type": "IP_ADDRESS",
+        "recognition_metadata": {
+            "recognizer_identifier": "IpRecognizer_68354721931616",
+            "recognizer_name": "IpRecognizer"
+        },
+        "score": 0.95,
+        "start": 310
+    },
+    {
+        "analysis_explanation": null,
+        "end": 86,
+        "entity_type": "PERSON",
+        "recognition_metadata": {
+            "recognizer_identifier": "SpacyRecognizer_68354728823296",
+            "recognizer_name": "SpacyRecognizer"
+        },
+        "score": 0.85,
+        "start": 73
+    },
+    {
+        "analysis_explanation": null,
+        "end": 106,
+        "entity_type": "LOCATION",
+        "recognition_metadata": {
+            "recognizer_identifier": "SpacyRecognizer_68354728823296",
+            "recognizer_name": "SpacyRecognizer"
+        },
+        "score": 0.85,
+        "start": 101
+    },
+    {
+        "analysis_explanation": null,
+        "end": 231,
+        "entity_type": "DATE_TIME",
+        "recognition_metadata": {
+            "recognizer_identifier": "SpacyRecognizer_68354728823296",
+            "recognizer_name": "SpacyRecognizer"
+        },
+        "score": 0.85,
+        "start": 219
+    },
+    {
+        "analysis_explanation": null,
+        "end": 526,
+        "entity_type": "PERSON",
+        "recognition_metadata": {
+            "recognizer_identifier": "SpacyRecognizer_68354728823296",
+            "recognizer_name": "SpacyRecognizer"
+        },
+        "score": 0.85,
+        "start": 522
+    },
+    {
+        "analysis_explanation": null,
+        "end": 566,
+        "entity_type": "US_SSN",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsSsnRecognizer_68354728822288",
+            "recognizer_name": "UsSsnRecognizer"
+        },
+        "score": 0.85,
+        "start": 555
+    },
+    {
+        "analysis_explanation": null,
+        "end": 381,
+        "entity_type": "PHONE_NUMBER",
+        "recognition_metadata": {
+            "recognizer_identifier": "PhoneRecognizer_68354721931376",
+            "recognizer_name": "PhoneRecognizer"
+        },
+        "score": 0.75,
+        "start": 367
+    },
+    {
+        "analysis_explanation": null,
+        "end": 566,
+        "entity_type": "PHONE_NUMBER",
+        "recognition_metadata": {
+            "recognizer_identifier": "PhoneRecognizer_68354721931376",
+            "recognizer_name": "PhoneRecognizer"
+        },
+        "score": 0.75,
+        "start": 555
+    },
+    {
+        "analysis_explanation": null,
+        "end": 603,
+        "entity_type": "US_DRIVER_LICENSE",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsLicenseRecognizer_68354728822960",
+            "recognizer_name": "UsLicenseRecognizer"
+        },
+        "score": 0.6499999999999999,
+        "start": 595
+    },
+    {
+        "analysis_explanation": null,
+        "end": 255,
+        "entity_type": "URL",
+        "recognition_metadata": {
+            "recognizer_identifier": "UrlRecognizer_68354721931808",
+            "recognizer_name": "UrlRecognizer"
+        },
+        "score": 0.5,
+        "start": 242
+    },
+    {
+        "analysis_explanation": null,
+        "end": 295,
+        "entity_type": "URL",
+        "recognition_metadata": {
+            "recognizer_identifier": "UrlRecognizer_68354721931808",
+            "recognizer_name": "UrlRecognizer"
+        },
+        "score": 0.5,
+        "start": 282
+    },
+    {
+        "analysis_explanation": null,
+        "end": 345,
+        "entity_type": "US_PASSPORT",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsPassportRecognizer_68354728823008",
+            "recognizer_name": "UsPassportRecognizer"
+        },
+        "score": 0.4,
+        "start": 336
+    },
+    {
+        "analysis_explanation": null,
+        "end": 520,
+        "entity_type": "US_BANK_NUMBER",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsBankRecognizer_68354728822912",
+            "recognizer_name": "UsBankRecognizer"
+        },
+        "score": 0.4,
+        "start": 508
+    },
+    {
+        "analysis_explanation": null,
+        "end": 143,
+        "entity_type": "IN_PAN",
+        "recognition_metadata": {
+            "recognizer_identifier": "InPanRecognizer_68354728824256",
+            "recognizer_name": "InPanRecognizer"
+        },
+        "score": 0.05,
+        "start": 133
+    },
+    {
+        "analysis_explanation": null,
+        "end": 345,
+        "entity_type": "US_BANK_NUMBER",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsBankRecognizer_68354728822912",
+            "recognizer_name": "UsBankRecognizer"
+        },
+        "score": 0.05,
+        "start": 336
+    },
+    {
+        "analysis_explanation": null,
+        "end": 345,
+        "entity_type": "US_SSN",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsSsnRecognizer_68354728822288",
+            "recognizer_name": "UsSsnRecognizer"
+        },
+        "score": 0.05,
+        "start": 336
+    },
+    {
+        "analysis_explanation": null,
+        "end": 345,
+        "entity_type": "US_DRIVER_LICENSE",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsLicenseRecognizer_68354728822960",
+            "recognizer_name": "UsLicenseRecognizer"
+        },
+        "score": 0.01,
+        "start": 336
+    },
+    {
+        "analysis_explanation": null,
+        "end": 520,
+        "entity_type": "US_DRIVER_LICENSE",
+        "recognition_metadata": {
+            "recognizer_identifier": "UsLicenseRecognizer_68354728822960",
+            "recognizer_name": "UsLicenseRecognizer"
+        },
+        "score": 0.01,
+        "start": 508
+    }
+]
